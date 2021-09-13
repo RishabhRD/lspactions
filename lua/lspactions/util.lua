@@ -15,9 +15,17 @@ end
 function M.check_lsp_active()
   local active_clients = vim.lsp.get_active_clients()
   if next(active_clients) == nil then
-    return false,'No lsp client available'
+    return false, "No lsp client available"
   end
-  return true,nil
+  return true, nil
+end
+
+function M.max(a, b)
+  if a > b then
+    return a
+  else
+    return b
+  end
 end
 
 return M

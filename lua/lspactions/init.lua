@@ -22,4 +22,20 @@ M.rename = {
   },
 }
 
+M.codeaction = {
+  keymaps = {
+    quit = {
+      n = {
+        "q",
+        "<Esc>",
+      },
+    },
+    exec = {
+      n = {
+        "<CR>",
+      },
+    },
+  },
+}
+
 return M
