@@ -6,8 +6,8 @@ local util = require "lspactions.util"
 
 local function request(method, params, handler)
   vim.validate {
-    method = {method, 's'};
-    handler = {handler, 'f', true};
+    method = { method, "s" },
+    handler = { handler, "f", true },
   }
   return vim.lsp.buf_request(0, method, params, handler)
 end
@@ -17,7 +17,8 @@ local function create_win(bufnr)
   local width = 30
   local height = 1
   local line, col = util.get_cursor_pos(height)
-  return popup.create(bufnr, {
+  local win_id, win = popup.create(bufnr, {
+    highlight = "LspActionsRenameWindow",
     title = "Rename",
     line = line,
     col = col,
@@ -25,6 +26,13 @@ local function create_win(bufnr)
     height = height,
     borderchars = borderchars,
   })
+
+  vim.api.nvim_win_set_option(
+    win.border.win_id,
+    "winhl",
+    "Normal:LspActionsRenameBorder"
+  )
+  return win_id
 end
 
 local function lsp_rename(new_name)
@@ -76,7 +84,7 @@ local function rename_ui(old_name)
   local bufnr = vim.api.nvim_create_buf(false, false)
   create_win(bufnr)
   vim.api.nvim_buf_set_lines(bufnr, 0, -1, false, { old_name })
-  vim.fn.feedkeys('A')
+  vim.fn.feedkeys "A"
   set_mappings(bufnr)
 end
 
