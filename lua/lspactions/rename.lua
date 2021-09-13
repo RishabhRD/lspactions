@@ -54,10 +54,10 @@ local function close(bufnr)
   end
 end
 
-local function do_rename(winid)
+local function do_rename(bufnr)
   return function()
     local new_name = vim.fn.getline "."
-    close(winid)()
+    close(bufnr)()
     lsp_rename(new_name)
   end
 end
