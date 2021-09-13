@@ -12,7 +12,7 @@ to add some that doesn't have good solution present already.
 
 - [plenary.nvim](https://github.com/nvim-lua/plenary.nvim)
 - [popup.nvim](https://github.com/nvim-lua/popup.nvim)
-- [astronauta.nvim](https://github.com/nvim-lua/astronauta.nvim) ... for lua keymaps (I don't want to write it again)
+- [astronauta.nvim](https://github.com/tjdevries/astronauta.nvim) ... for lua keymaps (I don't want to write it again)
 
 ## Current handlers
 
