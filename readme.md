@@ -24,4 +24,12 @@ It doesn't have any of problem that neovim's prompt buffer have that means
 prompt has old name as initial text and user can seamlessly edit the text
 inside prompt.
 
+### codeaction
 
+```lua
+vim.lsp.handlers["textDocument/codeAction"] = require'lspactions.codeaction'
+vim.cmd [[ nnoremap <leader>af :lua vim.lsp.buf.code_action()<CR> ]]
+```
+
+Floating menu for codeaction. You can scroll same as normal vim movements.
+Press enter to select the action. Or like: press 4 to select action 4.
