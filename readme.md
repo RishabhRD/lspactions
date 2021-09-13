@@ -18,7 +18,7 @@ to add some that doesn't have good solution present already.
 
 ### rename
 
-``nnoremap <leader>ar :lua require'lspactions.rename'()``
+``nnoremap <leader>ar :lua require'lspactions.rename'()<CR>``
 
 It doesn't have any of problem that neovim's prompt buffer have that means
 prompt has old name as initial text and user can seamlessly edit the text
