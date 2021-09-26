@@ -28,4 +28,9 @@ function M.max(a, b)
   end
 end
 
+function M.jump(result)
+  vim.lsp.util.jump_to_location(result)
+  vim.cmd ":normal! zz"
+end
+
 return M

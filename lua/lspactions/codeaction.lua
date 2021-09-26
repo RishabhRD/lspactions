@@ -1,5 +1,5 @@
 local nnoremap = vim.keymap.nnoremap
-local keymaps = require("lspactions").codeaction.keymaps
+local keymaps = require("lspactions.config").codeaction.keymaps
 local popup = require "popup"
 local util = require "lspactions.util"
 local max = util.max
@@ -88,7 +88,7 @@ end
 
 local function code_action_handler(err, result, _, _)
   if err then
-    print(err)
+    vim.notify(err)
     return
   end
   if result == nil or vim.tbl_isempty(result) then

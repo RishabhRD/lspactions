@@ -1,6 +1,6 @@
 local nnoremap = vim.keymap.nnoremap
 local inoremap = vim.keymap.inoremap
-local keymaps = require("lspactions").rename.keymaps
+local keymaps = require("lspactions.config").rename.keymaps
 local popup = require "popup"
 local util = require "lspactions.util"
 
@@ -92,7 +92,7 @@ local function rename(new_name)
   local active, msg = util.check_lsp_active()
   local params = vim.lsp.util.make_position_params()
   if not active then
-    print(msg)
+    vim.noftify(msg)
     return
   end
   if new_name == nil then
