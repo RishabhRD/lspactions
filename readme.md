@@ -1,6 +1,9 @@
 # [WIP] lspactions
 
-lspactions provide handlers for various lsp actions.
+lspactions provide handlers for various lsp actions. lspactions targets to
+be highly extensible and customizable. It uses floating for handlers if it
+really improves workflow otherwise try to provide similar (but highy customizable)
+handlers to nvim's default handlers.
 
 Current lspactions handlers:
 - codeaction (floating win)
@@ -10,11 +13,24 @@ Current lspactions handlers:
 - declaration (customizable quickfix)
 - implementation (customizable quickfix)
 
+document\_symbols and workspace\_symbols are good with telescope and hence
+is not targetted. If you feel there is some better way to do the same, feel
+free to make a PR.
+
 ## Dependencies
 
 - [plenary.nvim](https://github.com/nvim-lua/plenary.nvim)
 - [popup.nvim](https://github.com/nvim-lua/popup.nvim)
 - [astronauta.nvim](https://github.com/tjdevries/astronauta.nvim) ... for lua keymaps (I don't want to write it)
+
+## Installation
+
+```vim
+Plug 'nvim-lua/plenary.nvim'
+Plug 'nvim-lua/popup.nvim'
+Plug 'tjdevries/astronauta.nvim'
+Plug 'RishabhRD/lspactions'
+```
 
 ## Current handlers
 
