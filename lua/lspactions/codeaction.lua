@@ -86,10 +86,14 @@ local function set_mappings(buf, result)
   end
 end
 
-local function code_action_handler(err, result, _, _)
+local function code_action_handler(err, result, _, config)
+  config = config or {}
   if err then
     vim.notify(err)
     return
+  end
+  if config.transform then
+    result = config.transform(result)
   end
   if result == nil or vim.tbl_isempty(result) then
     vim.notify("No codeactions available", vim.log.levels.INFO)
