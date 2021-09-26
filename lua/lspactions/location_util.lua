@@ -1,13 +1,22 @@
 local jump = require("lspactions.util").jump
 local M = {}
 
+local custom_config = {
+  open_list = true,
+  jump_to_result = true,
+  jump_to_list = false,
+  loclist = false,
+  always_qf = false,
+}
+
 --[[
 -- config accepts {
 --   open_list : bool,
 --   jump_to_list : bool,
 --   jump_to_result : bool,
 --   loclist : bool,
---   always_qf : bool
+--   always_qf : bool,
+--   transform : function
 -- }
 --]]
 function M.response_to_list(map_result, entity)
@@ -42,14 +51,10 @@ function M.response_to_list(map_result, entity)
     end
   end
   return function(_, result, ctx, config)
-    config = config
-      or {
-        open_list = true,
-        jump_to_result = true,
-        jump_to_list = false,
-        loclist = false,
-        always_qf = false,
-      }
+    config = config or custom_config
+    if config.transform then
+      result = config.transform(result)
+    end
     if not result or vim.tbl_isempty(result) then
       vim.notify(string.format("No %s found", entity))
     elseif not config.always_qf and #result == 1 then

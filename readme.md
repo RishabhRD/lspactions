@@ -73,7 +73,8 @@ vim.lsp.handlers["textDocument/references"] = vim.lsp.with(require'lspactions'.r
   jump_to_result = true,
   jump_to_list = false,
   loclist = false,
-  always_qf = false
+  always_qf = false,
+  transform = function(result) return result end
 })
 ```
 
@@ -82,6 +83,8 @@ vim.lsp.handlers["textDocument/references"] = vim.lsp.with(require'lspactions'.r
 - jump\_to\_result: jump to first result of operation in current window
 - jump\_to\_list: make quickfix/loclist list current window
 - always\_qf: open quickfix/loclist even if there is only one result
+- transform: a function that accepts result returned from lsp-server, do
+some transformation on it(maybe like sorting) and return the new result.
 
 ### definition
 ```lua
@@ -98,7 +101,8 @@ vim.lsp.handlers["textDocument/definition"] = vim.lsp.with(require'lspactions'.d
   jump_to_result = true,
   jump_to_list = false,
   loclist = false,
-  always_qf = false
+  always_qf = false,
+  transform = function(result) return result end
 })
 ```
 
@@ -107,6 +111,8 @@ vim.lsp.handlers["textDocument/definition"] = vim.lsp.with(require'lspactions'.d
 - jump\_to\_result: jump to first result of operation in current window
 - jump\_to\_list: make quickfix/loclist list current window
 - always\_qf: open quickfix/loclist even if there is only one result
+- transform: a function that accepts result returned from lsp-server, do
+some transformation on it(maybe like sorting) and return the new result.
 
 ### declaration
 ```lua
@@ -123,7 +129,8 @@ vim.lsp.handlers["textDocument/declaration"] = vim.lsp.with(require'lspactions'.
   jump_to_result = true,
   jump_to_list = false,
   loclist = false,
-  always_qf = false
+  always_qf = false,
+  transform = function(result) return result end
 })
 ```
 
@@ -132,6 +139,8 @@ vim.lsp.handlers["textDocument/declaration"] = vim.lsp.with(require'lspactions'.
 - jump\_to\_result: jump to first result of operation in current window
 - jump\_to\_list: make quickfix/loclist list current window
 - always\_qf: open quickfix/loclist even if there is only one result
+- transform: a function that accepts result returned from lsp-server, do
+some transformation on it(maybe like sorting) and return the new result.
 
 ### implementation
 ```lua
@@ -148,7 +157,8 @@ vim.lsp.handlers["textDocument/implementation"] = vim.lsp.with(require'lspaction
   jump_to_result = true,
   jump_to_list = false,
   loclist = false,
-  always_qf = false
+  always_qf = false,
+  transform = function(result) return result end
 })
 ```
 
@@ -157,3 +167,5 @@ vim.lsp.handlers["textDocument/implementation"] = vim.lsp.with(require'lspaction
 - jump\_to\_result: jump to first result of operation in current window
 - jump\_to\_list: make quickfix/loclist list current window
 - always\_qf: open quickfix/loclist even if there is only one result
+- transform: a function that accepts result returned from lsp-server, do
+some transformation on it(maybe like sorting) and return the new result.
