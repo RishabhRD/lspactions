@@ -59,7 +59,7 @@ Floating menu for codeaction. You can scroll same as normal vim movements.
 Press enter to select the action. Or like: press 4 to select action 4.
 
 Customization:
-```lsp
+```lua
 vim.lsp.handlers["textDocument/codeAction"] = vim.lsp.with(require'lspactions'.codeaction, {
     transform = function(result) return result end
 })
