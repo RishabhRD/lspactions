@@ -5,6 +5,8 @@ be highly extensible and customizable. It uses floating for handlers if it
 really improves workflow otherwise try to provide similar (but highy customizable)
 handlers to nvim's default handlers.
 
+**lspactions require neovim 0.6+ (nightly)**
+
 Current lspactions handlers:
 - codeaction (floating win)
 - rename (floating win + robust prompt)
