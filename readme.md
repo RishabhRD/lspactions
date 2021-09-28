@@ -1,11 +1,11 @@
 # [WIP] lspactions
 
 lspactions provide handlers for various lsp actions. lspactions targets to
-be highly extensible and customizable. It uses floating for handlers if it
-really improves workflow otherwise try to provide similar (but highy customizable)
+be highly extensible and customizable. It uses floating windows for handlers **if it
+really improves workflow**(I am biased) otherwise try to provide similar (but highy customizable)
 handlers to nvim's default handlers.
 
-**lspactions require neovim 0.6+ (nightly)**
+**lspactions require neovim 0.5.1 release**
 
 Current lspactions handlers:
 - codeaction (floating win)
