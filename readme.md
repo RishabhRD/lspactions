@@ -61,9 +61,21 @@ Press enter to select the action. Or like: press 4 to select action 4.
 Customization:
 ```lua
 vim.lsp.handlers["textDocument/codeAction"] = vim.lsp.with(require'lspactions'.codeaction, {
-    transform = function(result) return result end
+    transform = function(result) return result end,
+    select_function = vim.ui.select, -- NOT lspactions default
 })
 ```
+
+select\_function has same specifications as ``vim.ui.select`` has. It describes how
+user would be prompted to select a code action from a list of codeactions.
+So providing ``vim.ui.select`` would provide selection menu as vim's default
+selection menu. And not overriding this option would give a floating list as
+selection menu.
+
+transform function accepts a function that takes result returned from
+lsp-server (extended result if you are using nvim 0.6) as argument, and return
+a new result by making some transformation on it. The transformation can be
+anything like sorting, etc.
 
 ![](https://user-images.githubusercontent.com/26287448/133169313-1c2118e3-48b8-47bc-b457-6e3a2ac9bca1.gif)
 

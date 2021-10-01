@@ -76,7 +76,8 @@ local function set_mappings(buf, result, handler)
   end
 end
 
-local function select(results, extract_title, handler)
+local function select(results, config, handler)
+  local extract_title = config.format_item
   local data_tbl = {}
   local width = 0
   for idx, d in ipairs(results) do
@@ -168,10 +169,18 @@ local function code_action_handler(_, results, ctx, config)
     end
   end
 
-  select(action_tuples, function(action_tuple)
-    local title = action_tuple[2].title:gsub("\r\n", "\\r\\n")
-    return title:gsub("\n", "\\n")
-  end, on_user_choice)
+  local select_function = select
+  if config.select_function then
+    select_function = config.select_function
+  end
+
+  select_function(action_tuples, {
+    format_item = function(action_tuple)
+      local title = action_tuple[2].title:gsub("\r\n", "\\r\\n")
+      return title:gsub("\n", "\\n")
+    end,
+    prompt = "Code Actions"
+  }, on_user_choice)
 end
 
 local function code_action_request(params)
@@ -198,7 +207,7 @@ local function codeaction(context)
 end
 
 local function range_codeaction(context, start_pos, end_pos)
-  vim.validate { context = { context, 't', true } }
+  vim.validate { context = { context, "t", true } }
   context = context or {}
   if not context.diagnostics then
     context.diagnostics = vim.lsp.diagnostic.get_line_diagnostics()
@@ -208,9 +217,8 @@ local function range_codeaction(context, start_pos, end_pos)
   code_action_request(params)
 end
 
-
 return {
   code_action = codeaction,
   range_code_action = range_codeaction,
-  code_action_handler = code_action_handler
+  code_action_handler = code_action_handler,
 }
