@@ -53,6 +53,7 @@ inside prompt.
 ```lua
 vim.lsp.handlers["textDocument/codeAction"] = require'lspactions'.codeaction
 vim.cmd [[ nnoremap <leader>af :lua require'lspactions'.code_action()<CR> ]]
+vim.cmd [[ nnoremap <leader>af :lua require'lspactions'.range_code_action()<CR> ]]
 ```
 
 Floating menu for codeaction. You can scroll same as normal vim movements.
