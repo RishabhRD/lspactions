@@ -32,6 +32,7 @@ local function create_win(bufnr)
     "winhl",
     "Normal:LspActionsRenameBorder"
   )
+  vim.api.nvim_win_set_option(win_id, "wrap", false)
   return win_id
 end
 
