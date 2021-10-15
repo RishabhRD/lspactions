@@ -63,11 +63,11 @@ Customization:
 ```lua
 vim.lsp.handlers["textDocument/codeAction"] = vim.lsp.with(require'lspactions'.codeaction, {
     transform = function(result) return result end,
-    select_function = vim.ui.select, -- NOT lspactions default
+    ui_select = vim.ui.select, -- NOT lspactions default
 })
 ```
 
-select\_function has same specifications as ``vim.ui.select`` has. It describes how
+ui\_select has same specifications as ``vim.ui.select`` has. It describes how
 user would be prompted to select a code action from a list of codeactions.
 So providing ``vim.ui.select`` would provide selection menu as vim's default
 selection menu. And not overriding this option would give a floating list as

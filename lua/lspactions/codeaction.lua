@@ -1,8 +1,10 @@
+local validate = vim.validate
+local lsp_util = vim.lsp.util
+local util = require("lspactions.util")
+local max = util.max
 local nnoremap = vim.keymap.nnoremap
 local keymaps = require("lspactions.config").codeaction.keymaps
 local popup = require "popup"
-local util = require "lspactions.util"
-local max = util.max
 
 local function create_win(bufnr, num_ele, width)
   local borderchars = { "─", "│", "─", "│", "╭", "╮", "╯", "╰" }
@@ -36,51 +38,11 @@ local function create_win(bufnr, num_ele, width)
   return win_id
 end
 
-local function close(bufnr)
-  return function()
-    vim.api.nvim_buf_delete(bufnr, { force = true })
-  end
-end
-
-local function codeaction_idx_handler(buf, result, idx, handler)
-  return function()
-    handler(result[idx])
-    close(buf)()
-  end
-end
-
-local function codeaction_selected_handler(buf, result, handler)
-  return function()
-    local idx = vim.fn.line "."
-    codeaction_idx_handler(buf, result, idx, handler)()
-  end
-end
-
-local function set_mappings(buf, result, handler)
-  local quit_key_tbl = keymaps.quit
-  local exec_key_tbl = keymaps.exec
-  for _, k in ipairs(quit_key_tbl.n) do
-    nnoremap { k, close(buf), buffer = buf }
-  end
-
-  for _, k in ipairs(exec_key_tbl.n) do
-    nnoremap { k, codeaction_selected_handler(buf, result, handler), buffer = buf }
-  end
-
-  for i = 1, #result, 1 do
-    nnoremap {
-      string.format("%d", i),
-      codeaction_idx_handler(buf, result, i, handler),
-      buffer = buf,
-    }
-  end
-end
-
-local function select(results, config, handler)
-  local extract_title = config.format_item
+local function select_codeaction(action_tuples, args, on_user_choice)
+  local extract_title = args.format_item
   local data_tbl = {}
   local width = 0
-  for idx, d in ipairs(results) do
+  for idx, d in ipairs(action_tuples) do
     local title = extract_title(d)
     data_tbl[idx] = title
     width = max(width, #title)
@@ -89,11 +51,66 @@ local function select(results, config, handler)
   local bufnr = vim.api.nvim_create_buf(false, false)
   vim.api.nvim_buf_set_lines(bufnr, 0, -1, false, data_tbl)
   vim.api.nvim_buf_set_option(bufnr, "modifiable", false)
-  create_win(bufnr, #results, width)
-  set_mappings(bufnr, results, handler)
+  create_win(bufnr, #action_tuples, width)
+
+  local function close()
+    vim.api.nvim_buf_delete(bufnr, { force = true })
+  end
+
+  local function apply_selection()
+    local idx = vim.fn.line "."
+    close()
+    on_user_choice(action_tuples[idx])
+  end
+
+  local function apply_idx_selection(idx)
+    return function()
+      close()
+      on_user_choice(action_tuples[idx])
+    end
+  end
+
+  local function set_mappings()
+    local quit_key_tbl = keymaps.quit
+    local exec_key_tbl = keymaps.exec
+
+    for _, k in ipairs(quit_key_tbl.n) do
+      nnoremap { k, close, buffer = bufnr }
+    end
+
+    for _, k in ipairs(exec_key_tbl.n) do
+      nnoremap { k, apply_selection, buffer = bufnr }
+    end
+
+    for i = 1, #action_tuples, 1 do
+      nnoremap {
+        string.format("%d", i),
+        apply_idx_selection(i),
+        buffer = bufnr,
+      }
+    end
+  end
+
+  set_mappings()
 end
 
-local function code_action_handler(_, results, ctx, config)
+local function request(method, params, handler)
+  validate {
+    method = { method, "s" },
+    handler = { handler, "f", true },
+  }
+  return vim.lsp.buf_request(0, method, params, handler)
+end
+
+local function execute_command(command)
+  validate {
+    command = { command.command, "s" },
+    arguments = { command.arguments, "t", true },
+  }
+  request("workspace/executeCommand", command)
+end
+
+local function on_code_action_results(_, results, ctx, config)
   config = config or {}
   if config.transform then
     results = config.transform(results)
@@ -109,10 +126,9 @@ local function code_action_handler(_, results, ctx, config)
     return
   end
 
-  ---@private
   local function apply_action(action, client)
     if action.edit then
-      vim.lsp.util.apply_workspace_edit(action.edit)
+      lsp_util.apply_workspace_edit(action.edit)
     end
     if action.command then
       local command = type(action.command) == "table" and action.command
@@ -123,28 +139,15 @@ local function code_action_handler(_, results, ctx, config)
         enriched_ctx.client_id = client.id
         fn(command, ctx)
       else
-        vim.lsp.buf.execute_command(command)
+        execute_command(command)
       end
     end
   end
 
-  ---@private
   local function on_user_choice(action_tuple)
     if not action_tuple then
       return
     end
-    -- textDocument/codeAction can return either Command[] or CodeAction[]
-    --
-    -- CodeAction
-    --  ...
-    --  edit?: WorkspaceEdit    -- <- must be applied before command
-    --  command?: Command
-    --
-    -- Command:
-    --  title: string
-    --  command: string
-    --  arguments?: any[]
-    --
     local client = vim.lsp.get_client_by_id(action_tuple[1])
     local action = action_tuple[2]
     if
@@ -169,25 +172,23 @@ local function code_action_handler(_, results, ctx, config)
     end
   end
 
-  local select_function = select
-  if config.select_function then
-    select_function = config.select_function
-  end
+  local select = config.ui_select or select_codeaction
 
-  select_function(action_tuples, {
+  select(action_tuples, {
+    prompt = "Code actions",
     format_item = function(action_tuple)
       local title = action_tuple[2].title:gsub("\r\n", "\\r\\n")
       return title:gsub("\n", "\\n")
     end,
-    prompt = "Code Actions"
   }, on_user_choice)
 end
 
 local function code_action_request(params)
   local bufnr = vim.api.nvim_get_current_buf()
   local method = "textDocument/codeAction"
+  local handler_func = vim.lsp.handlers[method] or on_code_action_results
   vim.lsp.buf_request_all(bufnr, method, params, function(results)
-    vim.lsp.handlers[method](
+    handler_func(
       nil,
       results,
       { bufnr = bufnr, method = method, params = params }
@@ -195,30 +196,30 @@ local function code_action_request(params)
   end)
 end
 
-local function codeaction(context)
-  vim.validate { context = { context, "t", true } }
+local function code_action(context)
+  validate { context = { context, "t", true } }
   context = context or {}
   if not context.diagnostics then
     context.diagnostics = vim.lsp.diagnostic.get_line_diagnostics()
   end
-  local params = vim.lsp.util.make_range_params()
+  local params = lsp_util.make_range_params()
   params.context = context
   code_action_request(params)
 end
 
-local function range_codeaction(context, start_pos, end_pos)
-  vim.validate { context = { context, "t", true } }
+local function range_code_action(context, start_pos, end_pos)
+  validate { context = { context, "t", true } }
   context = context or {}
   if not context.diagnostics then
     context.diagnostics = vim.lsp.diagnostic.get_line_diagnostics()
   end
-  local params = vim.lsp.util.make_given_range_params(start_pos, end_pos)
+  local params = lsp_util.make_given_range_params(start_pos, end_pos)
   params.context = context
   code_action_request(params)
 end
 
 return {
-  code_action = codeaction,
-  range_code_action = range_codeaction,
-  code_action_handler = code_action_handler,
+  code_action = code_action,
+  range_code_action = range_code_action,
+  code_action_handler = on_code_action_results,
 }
