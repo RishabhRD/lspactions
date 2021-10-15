@@ -7,7 +7,7 @@ function M.get_cursor_pos(height)
   local line_str = "cursor+2"
   local col_str = "cursor+0"
   if cur_line + height > editor_height - 2 then
-    line_str = string.format("cursor-%d", height + 2)
+    line_str = string.format("cursor-%d", height + 1)
   end
   return line_str, col_str
 end
