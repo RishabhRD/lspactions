@@ -1,4 +1,4 @@
-# [WIP] lspactions
+# lspactions
 
 lspactions provide handlers for various lsp actions. lspactions targets to
 be highly extensible and customizable. It uses floating windows for handlers **if it
