@@ -13,5 +13,6 @@ M.implementation = response_to_list(
   vim.lsp.util.locations_to_items,
   "implementation"
 )
+M.diagnostic = require"lspactions.diagnostic"
 
 return M
