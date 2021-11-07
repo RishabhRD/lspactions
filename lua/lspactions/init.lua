@@ -14,5 +14,6 @@ M.implementation = response_to_list(
   "implementation"
 )
 M.diagnostic = require"lspactions.diagnostic"
+M.select = require"lspactions.codeaction".select
 
 return M

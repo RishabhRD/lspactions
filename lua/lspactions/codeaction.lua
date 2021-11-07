@@ -219,6 +219,7 @@ local function range_code_action(context, start_pos, end_pos)
 end
 
 return {
+  select = select_codeaction,
   code_action = code_action,
   range_code_action = range_code_action,
   code_action_handler = on_code_action_results,
