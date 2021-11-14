@@ -2,7 +2,6 @@ local nnoremap = vim.keymap.nnoremap
 local inoremap = vim.keymap.inoremap
 local util = require "lspactions.util"
 local popup = require "popup"
-local M = {}
 
 local function create_win(prompt, bufnr)
   local borderchars = { "─", "│", "─", "│", "╭", "╮", "╯", "╰" }
@@ -62,20 +61,21 @@ end
 
 local function create_ui(opts, on_confirm)
   local bufnr = vim.api.nvim_create_buf(false, false)
-  create_win(bufnr)
+  create_win(opts.prompt, bufnr)
   vim.api.nvim_buf_set_lines(bufnr, 0, -1, false, { opts.default_reply })
   vim.fn.feedkeys "A"
   set_mappings(opts.keymaps, bufnr, on_confirm)
 end
 
-function M.input(opts, on_confirm)
+local function input(opts, on_confirm)
   vim.validate {
     on_confirm = { on_confirm, 'function', false },
   }
   opts = opts or {}
+  opts.prompt = opts.prompt or "Input"
   opts.keymaps = opts.keymaps or require("lspactions.config").rename.keymaps
   opts.default_reply = opts.default_reply or ""
   create_ui(opts, on_confirm)
 end
 
-return M
+return input

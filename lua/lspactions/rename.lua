@@ -1,7 +1,4 @@
-local nnoremap = vim.keymap.nnoremap
-local inoremap = vim.keymap.inoremap
-local keymaps = require("lspactions.config").rename.keymaps
-local popup = require "popup"
+local input = require "lspactions.input"
 local util = require "lspactions.util"
 
 local function request(method, params, handler)
@@ -12,31 +9,9 @@ local function request(method, params, handler)
   return vim.lsp.buf_request(0, method, params, handler)
 end
 
-local function create_win(bufnr)
-  local borderchars = { "─", "│", "─", "│", "╭", "╮", "╯", "╰" }
-  local width = 30
-  local height = 1
-  local line, col = util.get_cursor_pos(height)
-  local win_id, win = popup.create(bufnr, {
-    highlight = "LspActionsRenameWindow",
-    title = "Rename",
-    line = line,
-    col = col,
-    width = width,
-    height = height,
-    borderchars = borderchars,
-  })
-
-  vim.api.nvim_win_set_option(
-    win.border.win_id,
-    "winhl",
-    "Normal:LspActionsRenameBorder"
-  )
-  vim.api.nvim_win_set_option(win_id, "wrap", false)
-  return win_id
-end
 
 local function lsp_rename(new_name)
+  if new_name == nil then return end
   local params = vim.lsp.util.make_position_params()
   local current_name = vim.fn.expand "<cword>"
   if not (new_name and #new_name > 0) or new_name == current_name then
@@ -46,47 +21,11 @@ local function lsp_rename(new_name)
   vim.lsp.buf_request(0, "textDocument/rename", params)
 end
 
-local function close(bufnr)
-  return function()
-    if vim.fn.mode() == "i" then
-      vim.cmd [[stopinsert]]
-    end
-    vim.api.nvim_buf_delete(bufnr, { force = true })
-  end
-end
-
-local function do_rename(bufnr)
-  return function()
-    local new_name = vim.fn.getline "."
-    close(bufnr)()
-    lsp_rename(new_name)
-  end
-end
-
-local function set_mappings(buf)
-  local quit_key_tbl = keymaps.quit
-  local exec_key_tbl = keymaps.exec
-  for _, k in ipairs(quit_key_tbl.n) do
-    nnoremap { k, close(buf), buffer = buf }
-  end
-  for _, k in ipairs(quit_key_tbl.i) do
-    inoremap { k, close(buf), buffer = buf }
-  end
-
-  for _, k in ipairs(exec_key_tbl.n) do
-    nnoremap { k, do_rename(buf), buffer = buf }
-  end
-  for _, k in ipairs(exec_key_tbl.i) do
-    inoremap { k, do_rename(buf), buffer = buf }
-  end
-end
-
 local function rename_ui(old_name)
-  local bufnr = vim.api.nvim_create_buf(false, false)
-  create_win(bufnr)
-  vim.api.nvim_buf_set_lines(bufnr, 0, -1, false, { old_name })
-  vim.fn.feedkeys "A"
-  set_mappings(bufnr)
+  local opts = {}
+  opts.prompt = "Rename"
+  opts.default_reply = old_name
+  input(opts, lsp_rename)
 end
 
 local function rename(new_name)
