@@ -70,6 +70,7 @@ additional options:
 
 opts.keymaps : table
 Sample table(Also default):
+```lua
 {
     quit = {
       i = {
@@ -89,6 +90,7 @@ Sample table(Also default):
       },
     },
 }
+```
 
 quit contains mappings for keys where we don't accept the current input and just want
 to close the buffer.
