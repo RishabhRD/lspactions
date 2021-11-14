@@ -1,98 +1,5 @@
 local validate = vim.validate
-local lsp_util = vim.lsp.util
-local util = require("lspactions.util")
-local max = util.max
-local nnoremap = vim.keymap.nnoremap
-local keymaps = require("lspactions.config").codeaction.keymaps
-local popup = require "popup"
-
-local function create_win(bufnr, num_ele, width)
-  local borderchars = { "─", "│", "─", "│", "╭", "╮", "╯", "╰" }
-  if width + 2 > vim.o.columns then
-    width = vim.o.columns - 4
-  end
-  local height = num_ele
-  if num_ele > 10 then
-    num_ele = 10
-  end
-  local line, col = util.get_cursor_pos(height)
-  local win_id, win = popup.create(bufnr, {
-    highlight = "LspActionsCodeActionWindow",
-    title = "Code Actions",
-    line = line,
-    col = col,
-    width = width,
-    height = height,
-    borderchars = borderchars,
-    cursorline = true,
-  })
-
-  vim.api.nvim_win_set_option(win_id, "number", true)
-  vim.api.nvim_win_set_option(win_id, "wrap", false)
-
-  vim.api.nvim_win_set_option(
-    win.border.win_id,
-    "winhl",
-    "Normal:LspActionsCodeActionBorder"
-  )
-  return win_id
-end
-
-local function select_codeaction(action_tuples, args, on_user_choice)
-  local extract_title = args.format_item
-  local data_tbl = {}
-  local width = 0
-  for idx, d in ipairs(action_tuples) do
-    local title = extract_title(d)
-    data_tbl[idx] = title
-    width = max(width, #title)
-  end
-  width = width + 4
-  local bufnr = vim.api.nvim_create_buf(false, false)
-  vim.api.nvim_buf_set_lines(bufnr, 0, -1, false, data_tbl)
-  vim.api.nvim_buf_set_option(bufnr, "modifiable", false)
-  create_win(bufnr, #action_tuples, width)
-
-  local function close()
-    vim.api.nvim_buf_delete(bufnr, { force = true })
-  end
-
-  local function apply_selection()
-    local idx = vim.fn.line "."
-    close()
-    on_user_choice(action_tuples[idx])
-  end
-
-  local function apply_idx_selection(idx)
-    return function()
-      close()
-      on_user_choice(action_tuples[idx])
-    end
-  end
-
-  local function set_mappings()
-    local quit_key_tbl = keymaps.quit
-    local exec_key_tbl = keymaps.exec
-
-    for _, k in ipairs(quit_key_tbl.n) do
-      nnoremap { k, close, buffer = bufnr }
-    end
-
-    for _, k in ipairs(exec_key_tbl.n) do
-      nnoremap { k, apply_selection, buffer = bufnr }
-    end
-
-    for i = 1, #action_tuples, 1 do
-      nnoremap {
-        string.format("%d", i),
-        apply_idx_selection(i),
-        buffer = bufnr,
-      }
-    end
-  end
-
-  set_mappings()
-end
+local util = vim.lsp.util
 
 local function request(method, params, handler)
   validate {
@@ -128,7 +35,7 @@ local function on_code_action_results(_, results, ctx, config)
 
   local function apply_action(action, client)
     if action.edit then
-      lsp_util.apply_workspace_edit(action.edit)
+      util.apply_workspace_edit(action.edit)
     end
     if action.command then
       local command = type(action.command) == "table" and action.command
@@ -172,7 +79,7 @@ local function on_code_action_results(_, results, ctx, config)
     end
   end
 
-  local select = config.ui_select or select_codeaction
+  local select = config.ui_select or require'lspactions.select'
 
   select(action_tuples, {
     prompt = "Code actions",
@@ -202,7 +109,7 @@ local function code_action(context)
   if not context.diagnostics then
     context.diagnostics = vim.lsp.diagnostic.get_line_diagnostics()
   end
-  local params = lsp_util.make_range_params()
+  local params = util.make_range_params()
   params.context = context
   code_action_request(params)
 end
@@ -213,13 +120,12 @@ local function range_code_action(context, start_pos, end_pos)
   if not context.diagnostics then
     context.diagnostics = vim.lsp.diagnostic.get_line_diagnostics()
   end
-  local params = lsp_util.make_given_range_params(start_pos, end_pos)
+  local params = util.make_given_range_params(start_pos, end_pos)
   params.context = context
   code_action_request(params)
 end
 
 return {
-  select = select_codeaction,
   code_action = code_action,
   range_code_action = range_code_action,
   code_action_handler = on_code_action_results,

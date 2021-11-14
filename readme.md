@@ -50,9 +50,32 @@ Floating menu for user to pick a single item from a collection of entries.
 vim.ui.select = require'lspactions'.select
 ```
 
-It has same spec as vim.ui.select. Please refer ``:h vim.ui.select``
+It has mostly same spec as vim.ui.select. Please refer ``:h vim.ui.select``
 
-NOTE: For neovim 0.6, This configuration is enough for having floating codeaction. If you don't want
+Additional to ``vim.ui.select``, select suppports following additional options:
+
+- opts.keymaps : table
+
+Sample table(Also default):
+```lua
+  opts.keymaps = {
+    quit = {
+      n = {
+        "q",
+        "<Esc>",
+      },
+    },
+    exec = {
+      n = {
+        "<CR>",
+      },
+    },
+  }
+```
+
+
+
+**NOTE:** For neovim 0.6, This configuration is enough for having floating codeaction. If you don't want
 this selector to be global selector then you can use ``require'lspactions'.code_action``.
 
 ### input
@@ -61,35 +84,36 @@ Floating menu prompt for user to input some text. The prompt doesn't have any ne
 prompt buffer problems.
 
 ```lua
-vim.ui.select = require'lspactions'.select
+vim.ui.input = require'lspactions'.input
 ```
 
 It has mostly same spec as vim.ui.input. Please refer ``:h vim.ui.input``
 Addition to the options provided in ``vim.ui.input`` it supports following
 additional options:
 
-opts.keymaps : table
+- opts.keymaps : table
+
 Sample table(Also default):
 ```lua
-{
-    quit = {
-      i = {
-        "<C-c>",
+  opts.keymaps = {
+      quit = {
+        i = {
+          "<C-c>",
+        },
+        n = {
+          "q",
+          "<Esc>",
+        },
       },
-      n = {
-        "q",
-        "<Esc>",
+      exec = {
+        i = {
+          "<CR>",
+        },
+        n = {
+          "<CR>",
+        },
       },
-    },
-    exec = {
-      i = {
-        "<CR>",
-      },
-      n = {
-        "<CR>",
-      },
-    },
-}
+  }
 ```
 
 quit contains mappings for keys where we don't accept the current input and just want
@@ -99,7 +123,7 @@ exec contains mappings for keys where we accept the current input and have to ac
 it.
 
 
-NOTE: For neovim 0.6 nightly, it is enough to have 
+**NOTE:** For neovim 0.6 nightly, it is enough to have 
 ``vim.ui.input = require'lspactions'.input`` for renaming functionality.
 If user doesn't wish to use floating buffer input globally, then user can use
 lspactions rename module.

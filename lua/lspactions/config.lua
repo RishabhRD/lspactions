@@ -1,6 +1,6 @@
 local M = {}
 
-M.rename = {
+M.input = {
   keymaps = {
     quit = {
       i = {
@@ -22,7 +22,7 @@ M.rename = {
   },
 }
 
-M.codeaction = {
+M.select = {
   keymaps = {
     quit = {
       n = {
