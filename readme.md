@@ -92,6 +92,7 @@ Addition to the options provided in ``vim.ui.input`` it supports following
 additional options:
 
 - opts.keymaps : table
+
 Sample table(Also default):
 ```lua
   opts.keymaps = {
@@ -122,7 +123,7 @@ exec contains mappings for keys where we accept the current input and have to ac
 it.
 
 
-NOTE: For neovim 0.6 nightly, it is enough to have 
+**NOTE:** For neovim 0.6 nightly, it is enough to have 
 ``vim.ui.input = require'lspactions'.input`` for renaming functionality.
 If user doesn't wish to use floating buffer input globally, then user can use
 lspactions rename module.
