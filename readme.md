@@ -220,7 +220,7 @@ All the parameters presented in code of this section are optional.
 local diag = require'lspactions'.diagnostics
 ```
 
-- show\_position\_diagnostics
+#### show\_position\_diagnostics
 
 ```lua
 diag.show_position_diagnostics(opts, bufnr, position)
@@ -228,7 +228,7 @@ diag.show_position_diagnostics(opts, bufnr, position)
   - opts : table with fields
     - severity : string with possible values: {ERROR, WARN, INFO, HINT}
 
-- show\_line\_diagnostics
+#### show\_line\_diagnostics
 
 ```lua
 diag.show_line_diagnostics(opts, bufnr, position)
@@ -236,7 +236,7 @@ diag.show_line_diagnostics(opts, bufnr, position)
   - opts : table with fields
     - severity : string with possible values: {ERROR, WARN, INFO, HINT}
 
-- goto\_next
+#### goto\_next
 
 ```lua
 diag.goto_next(opts)
@@ -247,7 +247,7 @@ diag.goto_next(opts)
     - float: bool (default true) Whether to open floating window after jumping to next diagnostic
 
 
-- goto\_prev
+#### goto\_prev
 
 ```lua
 diag.goto_prev(opts)
@@ -258,7 +258,7 @@ diag.goto_prev(opts)
     - float: bool (default true) Whether to open floating window after jumping to previous diagnostic
 
 
-- set\_qflist
+#### set\_qflist
 
 ```lua
 diag.set_qflist(opts)
@@ -266,7 +266,7 @@ diag.set_qflist(opts)
   - opts : table with fields
     - severity : string with possible values: {ERROR, WARN, INFO, HINT}
     - client\_id : Which client to diagnostics to display
-- set\_qflist
+#### set\_loclist
 
 ```lua
 diag.set_loclist(opts)
