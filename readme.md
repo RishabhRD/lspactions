@@ -1,9 +1,10 @@
 # lspactions
 
-lspactions provide handlers for various lsp actions. lspactions targets to
-be highly extensible and customizable. It uses floating windows for handlers **if it
-really improves workflow**(I am biased) otherwise try to provide similar (but highy customizable)
-handlers to nvim's default handlers.
+lspactions provide handlers for various lsp actions. lspactions also provide
+utility functions for exposing UI for other components. lspactions targets to
+be highly extensible and customizable. It uses floating windows for handlers
+**if it really improves workflow**(I am biased) otherwise try to provide
+similar (but highy customizable) handlers to nvim's default handlers.
 
 **lspactions require neovim 0.5.1 release**
 
@@ -14,6 +15,10 @@ Current lspactions handlers:
 - definition (customizable quickfix)
 - declaration (customizable quickfix)
 - implementation (customizable quickfix)
+- diagnostics (layer on vim.diagnostics)
+
+Current UI exposing functions:
+- select (floating win selector for items)
 
 document\_symbols and workspace\_symbols are good with telescope and hence
 is not targetted. If you feel there is some better way to do the same, feel
@@ -33,6 +38,21 @@ Plug 'nvim-lua/popup.nvim'
 Plug 'tjdevries/astronauta.nvim'
 Plug 'RishabhRD/lspactions'
 ```
+
+## Current UI exposing functions
+
+### select
+
+Floating menu for user to pick a single item from a collection of entries.
+
+```lua
+vim.ui.select = require'lspactions'.select
+```
+
+It has same spec as vim.ui.select. Please refer ``:h vim.ui.select``
+
+NOTE: This configuration is enough for having floating codeaction. If you don't want
+this selector to be global selector then you can use ``require'lspactions'.code_action``.
 
 ## Current handlers
 
@@ -191,3 +211,68 @@ vim.lsp.handlers["textDocument/implementation"] = vim.lsp.with(require'lspaction
 - always\_qf: open quickfix/loclist even if there is only one result
 - transform: a function that accepts result returned from lsp-server, do
 some transformation on it(maybe like sorting) and return the new result.
+
+### diagnostics
+
+All the parameters presented in code of this section are optional.
+
+```lua
+local diag = require'lspactions'.diagnostics
+```
+
+- show\_position\_diagnostics
+
+```lua
+diag.show_position_diagnostics(opts, bufnr, position)
+```
+  - opts : table with fields
+    - severity : string with possible values: {ERROR, WARN, INFO, HINT}
+
+- show\_line\_diagnostics
+
+```lua
+diag.show_line_diagnostics(opts, bufnr, position)
+```
+  - opts : table with fields
+    - severity : string with possible values: {ERROR, WARN, INFO, HINT}
+
+- goto\_next
+
+```lua
+diag.goto_next(opts)
+```
+  - opts : table with fields
+    - severity : string with possible values: {ERROR, WARN, INFO, HINT}
+    - wrap : bool (default true) Whether to loop around file or not
+    - float: bool (default true) Whether to open floating window after jumping to next diagnostic
+
+
+- goto\_prev
+
+```lua
+diag.goto_prev(opts)
+```
+  - opts : table with fields
+    - severity : string with possible values: {ERROR, WARN, INFO, HINT}
+    - wrap : bool (default true) Whether to loop around file or not
+    - float: bool (default true) Whether to open floating window after jumping to previous diagnostic
+
+
+- set\_qflist
+
+```lua
+diag.set_qflist(opts)
+```
+  - opts : table with fields
+    - severity : string with possible values: {ERROR, WARN, INFO, HINT}
+    - client\_id : Which client to diagnostics to display
+- set\_qflist
+
+```lua
+diag.set_loclist(opts)
+```
+  - opts : table with fields
+    - severity : string with possible values: {ERROR, WARN, INFO, HINT}
+    - client\_id : Which client to diagnostics to display
+
+
