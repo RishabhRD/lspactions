@@ -19,6 +19,7 @@ Current lspactions handlers:
 
 Current UI exposing functions:
 - select (floating win selector for items)
+- input (floating prompt input)
 
 document\_symbols and workspace\_symbols are good with telescope and hence
 is not targetted. If you feel there is some better way to do the same, feel
@@ -54,6 +55,53 @@ It has same spec as vim.ui.select. Please refer ``:h vim.ui.select``
 NOTE: This configuration is enough for having floating codeaction. If you don't want
 this selector to be global selector then you can use ``require'lspactions'.code_action``.
 
+### input
+
+Floating menu prompt for user to input some text. The prompt doesn't have any neovim
+prompt buffer problems.
+
+```lua
+vim.ui.select = require'lspactions'.select
+```
+
+It has mostly same spec as vim.ui.input. Please refer ``:h vim.ui.input``
+Addition to the options provided in ``vim.ui.input`` it supports following
+additional options:
+
+opts.keymaps : table
+Sample table(Also default):
+{
+    quit = {
+      i = {
+        "<C-c>",
+      },
+      n = {
+        "q",
+        "<Esc>",
+      },
+    },
+    exec = {
+      i = {
+        "<CR>",
+      },
+      n = {
+        "<CR>",
+      },
+    },
+}
+
+quit contains mappings for keys where we don't accept the current input and just want
+to close the buffer.
+
+exec contains mappings for keys where we accept the current input and have to act upon
+it.
+
+
+NOTE: For neovim 0.6 nightly, it is enough to have 
+``vim.ui.input = require'lspactions'.input`` for renaming functionality.
+If user doesn't wish to use floating buffer input globally, then user can use
+lspactions rename module.
+
 ## Current handlers
 
 ### rename
@@ -67,6 +115,16 @@ prompt has old name as initial text and user can seamlessly edit the text
 inside prompt.
 
 ![](https://user-images.githubusercontent.com/26287448/133168403-35d5c6e0-16ad-44ee-9d2e-e3d056016746.gif)
+
+Customization:
+```lua
+require'lspactions'.rename(nil, {
+    input = vim.ui.input, -- NOT lspactions default
+    keymap = <keymap_table> -- sample shown in input section
+})
+```
+input function has same specifications as ``vim.ui.input``. It describes how
+user would input new name for the node.
 
 ### codeaction
 
