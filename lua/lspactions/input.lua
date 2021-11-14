@@ -38,7 +38,10 @@ local function set_mappings(keymaps, buf, on_confirm)
 
   local function apply_action()
     local new_name = vim.fn.getline "."
-    close()
+    if vim.fn.mode() == "i" then
+      vim.cmd [[stopinsert]]
+    end
+    vim.api.nvim_buf_delete(buf, { force = true })
     on_confirm(new_name)
   end
 
