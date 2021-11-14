@@ -76,7 +76,7 @@ local function input(opts, on_confirm)
   }
   opts = opts or {}
   opts.prompt = opts.prompt or "Input"
-  opts.keymaps = opts.keymaps or require("lspactions.config").rename.keymaps
+  opts.keymaps = opts.keymaps or require("lspactions.config").input.keymaps
   opts.default_reply = opts.default_reply or ""
   create_ui(opts, on_confirm)
 end

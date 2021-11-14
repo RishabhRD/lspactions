@@ -39,7 +39,7 @@ local function select(items, opts, on_choice)
   opts = opts or {}
   opts.prompt = opts.prompt or "Select one of"
   opts.format_item = opts.format_item or tostring
-  local keymaps = opts.keymaps or require("lspactions.config").codeaction.keymaps
+  local keymaps = opts.keymaps or require("lspactions.config").select.keymaps
   local extract_title = opts.format_item
   local data_tbl = {}
   local width = 0
