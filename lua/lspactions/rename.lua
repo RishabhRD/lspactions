@@ -9,9 +9,10 @@ local function request(method, params, handler)
   return vim.lsp.buf_request(0, method, params, handler)
 end
 
-
 local function lsp_rename(new_name)
-  if new_name == nil then return end
+  if new_name == nil then
+    return
+  end
   local params = vim.lsp.util.make_position_params()
   local current_name = vim.fn.expand "<cword>"
   if not (new_name and #new_name > 0) or new_name == current_name then
@@ -21,14 +22,15 @@ local function lsp_rename(new_name)
   vim.lsp.buf_request(0, "textDocument/rename", params)
 end
 
-local function rename_ui(old_name)
-  local opts = {}
-  opts.prompt = "Rename"
-  opts.default_reply = old_name
-  input(opts, lsp_rename)
-end
-
-local function rename(new_name)
+local function rename(new_name, opts)
+  opts = opts or {}
+  opts.input = opts.input or input
+  local function rename_ui(old_name)
+    local rename_opts = {}
+    rename_opts.prompt = "Rename"
+    rename_opts.default_reply = old_name
+    opts.input(rename_opts, lsp_rename)
+  end
   local active, msg = util.check_lsp_active()
   local params = vim.lsp.util.make_position_params()
   if not active then
