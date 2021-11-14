@@ -52,7 +52,7 @@ vim.ui.select = require'lspactions'.select
 
 It has same spec as vim.ui.select. Please refer ``:h vim.ui.select``
 
-NOTE: This configuration is enough for having floating codeaction. If you don't want
+NOTE: For neovim 0.6, This configuration is enough for having floating codeaction. If you don't want
 this selector to be global selector then you can use ``require'lspactions'.code_action``.
 
 ### input
