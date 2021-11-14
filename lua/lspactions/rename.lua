@@ -27,7 +27,7 @@ local function rename(new_name, opts)
   opts.input = opts.input or input
   local function rename_ui(old_name)
     local rename_opts = {}
-    rename_opts.prompt = "Rename"
+    rename_opts.prompt = "New name: "
     rename_opts.default_reply = old_name
     rename_opts.keymaps = opts.keymaps
     opts.input(rename_opts, lsp_rename)
