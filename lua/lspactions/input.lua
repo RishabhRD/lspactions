@@ -65,7 +65,7 @@ end
 local function create_ui(opts, on_confirm)
   local bufnr = vim.api.nvim_create_buf(false, false)
   create_win(opts.prompt, bufnr)
-  vim.api.nvim_buf_set_lines(bufnr, 0, -1, false, { opts.default_reply })
+  vim.api.nvim_buf_set_lines(bufnr, 0, -1, false, { opts.default })
   vim.fn.feedkeys "A"
   set_mappings(opts.keymaps, bufnr, on_confirm)
 end
@@ -77,7 +77,7 @@ local function input(opts, on_confirm)
   opts = opts or {}
   opts.prompt = opts.prompt or "Input"
   opts.keymaps = opts.keymaps or require("lspactions.config").input.keymaps
-  opts.default_reply = opts.default_reply or ""
+  opts.default = opts.default or ""
   create_ui(opts, on_confirm)
 end
 
