@@ -1,4 +1,4 @@
-local util = require("lspactions.util")
+local util = require "lspactions.util"
 local max = util.max
 local popup = require "popup"
 
@@ -84,7 +84,12 @@ local function select(items, opts, on_choice)
     end
 
     for i = 1, #items, 1 do
-      vim.keymap.set("n", string.format("%d", i), apply_idx_selection(i), { buffer = bufnr })
+      vim.keymap.set(
+        "n",
+        string.format("%d", i),
+        apply_idx_selection(i),
+        { buffer = bufnr }
+      )
     end
   end
 

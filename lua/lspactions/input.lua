@@ -70,7 +70,7 @@ end
 
 local function input(opts, on_confirm)
   vim.validate {
-    on_confirm = { on_confirm, 'function', false },
+    on_confirm = { on_confirm, "function", false },
   }
   opts = opts or {}
   opts.prompt = opts.prompt or "Input"
