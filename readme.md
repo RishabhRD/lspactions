@@ -2,7 +2,7 @@
 
 ** WARNING: This branch is for users who are still using nvim-0.6. lspactions
 require astronauta.nvim which is deprecated now and you need to some older
-commit of it for plugin to be usable. Otherwise switch to new neovim master.**
+commit of it for plugin to be usable. Otherwise switch to new neovim master. **
 
 lspactions provide handlers for various lsp actions. lspactions also provide
 utility functions for exposing UI for other components. lspactions targets to
