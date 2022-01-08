@@ -1,5 +1,4 @@
-local nnoremap = vim.keymap.nnoremap
-local util = require("lspactions.util")
+local util = require "lspactions.util"
 local max = util.max
 local popup = require "popup"
 
@@ -77,19 +76,20 @@ local function select(items, opts, on_choice)
     local exec_key_tbl = keymaps.exec
 
     for _, k in ipairs(quit_key_tbl.n) do
-      nnoremap { k, close, buffer = bufnr }
+      vim.keymap.set("n", k, close, { buffer = bufnr })
     end
 
     for _, k in ipairs(exec_key_tbl.n) do
-      nnoremap { k, apply_selection, buffer = bufnr }
+      vim.keymap.set("n", k, apply_selection, { buffer = bufnr })
     end
 
     for i = 1, #items, 1 do
-      nnoremap {
+      vim.keymap.set(
+        "n",
         string.format("%d", i),
         apply_idx_selection(i),
-        buffer = bufnr,
-      }
+        { buffer = bufnr }
+      )
     end
   end
 

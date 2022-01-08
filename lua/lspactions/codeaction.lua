@@ -79,7 +79,7 @@ local function on_code_action_results(_, results, ctx, config)
     end
   end
 
-  local select = config.ui_select or require'lspactions.select'
+  local select = config.ui_select or require "lspactions.select"
 
   select(action_tuples, {
     prompt = "Code actions",

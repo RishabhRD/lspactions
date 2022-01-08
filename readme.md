@@ -6,7 +6,7 @@ be highly extensible and customizable. It uses floating windows for handlers
 **if it really improves workflow**(I am biased) otherwise try to provide
 similar (but highy customizable) handlers to nvim's default handlers.
 
-**lspactions require neovim 0.5.1 release**
+**lspactions require neovim nightly release**
 
 Current lspactions handlers:
 - codeaction (floating win)
@@ -29,14 +29,12 @@ free to make a PR.
 
 - [plenary.nvim](https://github.com/nvim-lua/plenary.nvim)
 - [popup.nvim](https://github.com/nvim-lua/popup.nvim)
-- [astronauta.nvim](https://github.com/tjdevries/astronauta.nvim) ... for lua keymaps (I don't want to write it)
 
 ## Installation
 
 ```vim
 Plug 'nvim-lua/plenary.nvim'
 Plug 'nvim-lua/popup.nvim'
-Plug 'tjdevries/astronauta.nvim'
 Plug 'RishabhRD/lspactions'
 ```
 
@@ -123,7 +121,7 @@ exec contains mappings for keys where we accept the current input and have to ac
 it.
 
 
-**NOTE:** For neovim 0.6 nightly, it is enough to have 
+**NOTE:** For neovim 0.6 nightly, it is enough to have
 ``vim.ui.input = require'lspactions'.input`` for renaming functionality.
 If user doesn't wish to use floating buffer input globally, then user can use
 lspactions rename module.

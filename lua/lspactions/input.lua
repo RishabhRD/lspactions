@@ -1,5 +1,3 @@
-local nnoremap = vim.keymap.nnoremap
-local inoremap = vim.keymap.inoremap
 local util = require "lspactions.util"
 local popup = require "popup"
 
@@ -48,17 +46,17 @@ local function set_mappings(keymaps, buf, on_confirm)
   local quit_key_tbl = keymaps.quit
   local exec_key_tbl = keymaps.exec
   for _, k in ipairs(quit_key_tbl.n) do
-    nnoremap { k, close, buffer = buf }
+    vim.keymap.set("n", k, close, { buffer = buf })
   end
   for _, k in ipairs(quit_key_tbl.i) do
-    inoremap { k, close, buffer = buf }
+    vim.keymap.set("i", k, close, { buffer = buf })
   end
 
   for _, k in ipairs(exec_key_tbl.n) do
-    nnoremap { k, apply_action, buffer = buf }
+    vim.keymap.set("n", k, apply_action, { buffer = buf })
   end
   for _, k in ipairs(exec_key_tbl.i) do
-    inoremap { k, apply_action, buffer = buf }
+    vim.keymap.set("i", k, apply_action, { buffer = buf })
   end
 end
 
@@ -72,7 +70,7 @@ end
 
 local function input(opts, on_confirm)
   vim.validate {
-    on_confirm = { on_confirm, 'function', false },
+    on_confirm = { on_confirm, "function", false },
   }
   opts = opts or {}
   opts.prompt = opts.prompt or "Input"

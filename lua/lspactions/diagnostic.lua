@@ -1,7 +1,7 @@
 local M = {}
 
 local function severity_lsp_to_vim(severity)
-  if type(severity) == 'string' then
+  if type(severity) == "string" then
     severity = vim.lsp.protocol.DiagnosticSeverity[severity]
   end
   return severity
@@ -14,7 +14,7 @@ function M.show_position_diagnostics(opts, buf_nr, position)
   if opts.severity then
     opts.severity = severity_lsp_to_vim(opts.severity)
   elseif opts.severity_limit then
-    opts.severity = {min=severity_lsp_to_vim(opts.severity_limit)}
+    opts.severity = { min = severity_lsp_to_vim(opts.severity_limit) }
   end
   return vim.diagnostic.open_float(buf_nr, opts)
 end
@@ -34,7 +34,7 @@ function M.goto_next(opts)
     if opts.severity then
       opts.severity = severity_lsp_to_vim(opts.severity)
     elseif opts.severity_limit then
-      opts.severity = {min=severity_lsp_to_vim(opts.severity_limit)}
+      opts.severity = { min = severity_lsp_to_vim(opts.severity_limit) }
     end
   end
   return vim.diagnostic.goto_next(opts)
@@ -45,7 +45,7 @@ function M.goto_prev(opts)
     if opts.severity then
       opts.severity = severity_lsp_to_vim(opts.severity)
     elseif opts.severity_limit then
-      opts.severity = {min=severity_lsp_to_vim(opts.severity_limit)}
+      opts.severity = { min = severity_lsp_to_vim(opts.severity_limit) }
     end
   end
   return vim.diagnostic.goto_prev(opts)
@@ -56,7 +56,7 @@ function M.set_qflist(opts)
   if opts.severity then
     opts.severity = severity_lsp_to_vim(opts.severity)
   elseif opts.severity_limit then
-    opts.severity = {min=severity_lsp_to_vim(opts.severity_limit)}
+    opts.severity = { min = severity_lsp_to_vim(opts.severity_limit) }
   end
   if opts.client_id then
     opts.client_id = nil
@@ -72,7 +72,7 @@ function M.set_loclist(opts)
   if opts.severity then
     opts.severity = severity_lsp_to_vim(opts.severity)
   elseif opts.severity_limit then
-    opts.severity = {min=severity_lsp_to_vim(opts.severity_limit)}
+    opts.severity = { min = severity_lsp_to_vim(opts.severity_limit) }
   end
   if opts.client_id then
     opts.client_id = nil
