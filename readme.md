@@ -73,9 +73,6 @@ Sample table(Also default):
 
 
 
-**NOTE:** For neovim 0.6, This configuration is enough for having floating codeaction. If you don't want
-this selector to be global selector then you can use ``require'lspactions'.code_action``.
-
 ### input
 
 Floating menu prompt for user to input some text. The prompt doesn't have any neovim
@@ -121,7 +118,6 @@ exec contains mappings for keys where we accept the current input and have to ac
 it.
 
 
-**NOTE:** For neovim 0.6 nightly, it is enough to have
 ``vim.ui.input = require'lspactions'.input`` for renaming functionality.
 If user doesn't wish to use floating buffer input globally, then user can use
 lspactions rename module.
@@ -176,7 +172,7 @@ selection menu. And not overriding this option would give a floating list as
 selection menu.
 
 transform function accepts a function that takes result returned from
-lsp-server (extended result if you are using nvim 0.6) as argument, and return
+lsp-server as argument, and return
 a new result by making some transformation on it. The transformation can be
 anything like sorting, etc.
 
