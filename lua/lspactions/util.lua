@@ -29,7 +29,7 @@ function M.max(a, b)
 end
 
 function M.jump(result)
-  vim.lsp.util.jump_to_location(result)
+  vim.lsp.util.jump_to_location(result, "utf-8")
   vim.cmd ":normal! zz"
 end
 

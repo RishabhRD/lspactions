@@ -27,7 +27,7 @@ function M.response_to_list(map_result, entity)
     if config.loclist then
       vim.fn.setloclist(0, {}, " ", {
         title = "Language Server",
-        items = map_result(result, ctx.bufnr),
+        items = map_result(result, "utf-8"),
       })
       if config.open_list then
         local win = vim.api.nvim_get_current_win()
@@ -39,7 +39,7 @@ function M.response_to_list(map_result, entity)
     else
       vim.fn.setqflist({}, " ", {
         title = "Language Server",
-        items = map_result(result, ctx.bufnr),
+        items = map_result(result, "utf-8"),
       })
       if config.open_list then
         local win = vim.api.nvim_get_current_win()
